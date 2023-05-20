@@ -13,7 +13,11 @@ import pandas as pd #to create dataframe object which allow us to work with tabu
 import pickle #pickle provides a way to serialize and deserialize python objects serialize is a way of converting an object into a format that can be stored or transmitted while deserialize is a way to convert serialize data back to object
 #it save our ml model as files which can be loaded and used in fastapi application
 #when we tarin our ml model we fit it on a dataset and obtain a set of learned parameters that can be used to make prediction on new data these learned parameters can be saved as a file which can then be loaded and used to make prediction on new data
+import logging #logging is a module that provides a way to log messages from our application
+
 app = FastAPI()  #when we call FastAPI() we create a new FastAPI application which is used to define our API endpoints, middleware and other configuration settings
+
+
 
 origins = ["*"] #it is a parameter that can be passed to the fastapi instance to configure CORS settings
 #origin is a list of string that represents the allowed origin for cross origin request
@@ -42,17 +46,27 @@ class cropInfo(BaseModel):
     rainfall: int
 
 @app.post('/predict')
-async def predict_crop(cropInfo: cropInfo):
-    nitrogen_value = cropInfo.nitrogen
-    phosphorus_value = cropInfo.phosphorus
-    potassium_value = cropInfo.potassium
-    temperature_value = cropInfo.temperature
-    humidity_value = cropInfo.humidity
-    ph_value = cropInfo.ph
-    rainfall_value = cropInfo.rainfall
+async def predict_crop(crop_info: CropInfo):
+    try:
+        # Extract values from input
+        nitrogen_value = crop_info.nitrogen
+        phosphorus_value = crop_info.phosphorus
+        potassium_value = crop_info.potassium
+        temperature_value = crop_info.temperature
+        humidity_value = crop_info.humidity
+        ph_value = crop_info.ph
+        rainfall_value = crop_info.rainfall
 
-    prediction = better_model.predict(pd.DataFrame([[nitrogen_value,phosphorus_value,potassium_value,temperature_value, humidity_value,ph_value,rainfall_value]],
-                                                   columns = ['N','P','K','temperature','humidity','ph','rainfall']))
-    print(prediction)
+        # Prepare input data for prediction
+        input_data = pd.DataFrame([[nitrogen_value, phosphorus_value, potassium_value, temperature_value,
+                                    humidity_value, ph_value, rainfall_value]],
+                                    columns=['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall'])
 
-    return { "result" : prediction[0]}
+        # Make the prediction using the loaded model
+        prediction = model.predict(input_data)[0]
+
+        return {"result": prediction}
+
+    except Exception as e:
+        logging.exception("An error occurred during crop prediction.")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
