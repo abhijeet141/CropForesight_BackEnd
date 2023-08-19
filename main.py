@@ -1,7 +1,8 @@
-from fastapi import FastAPI  # it imports FastAPI class from the fastapi module
+from fastapi import FastAPI, Request  # it imports FastAPI class from the fastapi module
 from fastapi.middleware.cors import (
     CORSMiddleware,
-)  # it imports CORSMiddleware from fastapi.middleware.cors module
+) # it imports CORSMiddleware from fastapi.middleware.cors module
+from fastapi.templating import Jinja2Templates
 
 # CORS-CrossOriginResourceSharing it is a security mechanism implemented by web browser to restrict cross origin request from web application
 # When a web browser is running on one origin(domain,protocol and port) and it tries to access resource from other origin the browser will block the request by default
@@ -41,6 +42,8 @@ cropRecomendation = pd.read_csv("./Crop_recommendation.csv")
 
 better_model = pickle.load(open("./crop_recomendation.pkl", "rb"))
 
+templates = Jinja2Templates(directory="")
+
 
 class cropInfo(BaseModel):
     nitrogen: int
@@ -50,6 +53,10 @@ class cropInfo(BaseModel):
     humidity: int
     ph: int
     rainfall: int
+    
+@app.get('/')
+def default_response(request: Request):
+    return templates.TemplateResponse('welcome.html', {"request": request})
 
 
 @app.post("/predict")

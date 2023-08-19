@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crop Foresight API Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1 {
+            color: #007bff;
+        }
+        code {
+            background-color: #f8f9fa;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .example-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the Crop Prediction API</h1>
+        <p>
+            To use the <code>/predict</code> API, send a POST request to the endpoint with the following JSON data:
+        </p>
+        <pre>
+            <strong>Endpoint:</strong> <code>/predict</code>
+            <strong>Method:</strong> <code>POST</code>
+            <strong>Content-Type:</strong> <code>application/json</code>
+            <strong>Body:</strong>
+            {
+                "cropInfo": {
+                    "nitrogen": <strong>[Integer]</strong>,
+                    "phosphorus": <strong>[Integer]</strong>,
+                    "potassium": <strong>[Integer]</strong>,
+                    "temperature": <strong>[Integer]</strong>,
+                    "humidity": <strong>[Integer]</strong>,
+                    "ph": <strong>[Integer]</strong>,
+                    "rainfall": <strong>[Integer]</strong>
+                }
+            }
+        </pre>
+        <p>
+            Replace <strong>[Integer]</strong> with the respective values for your crop prediction.
+        </p>
+        <div class="example-container">
+            <h2>Example Request</h2>
+            <pre>
+                <strong>Endpoint:</strong> <code>/predict</code>
+                <strong>Method:</strong> <code>POST</code>
+                <strong>Content-Type:</strong> <code>application/json</code>
+                <strong>Body:</strong>
+                {
+                    "cropInfo": {
+                        "nitrogen": 50,
+                        "phosphorus": 25,
+                        "potassium": 30,
+                        "temperature": 28,
+                        "humidity": 70,
+                        "ph": 6.5,
+                        "rainfall": 100
+                    }
+                }
+            </pre>
+        </div>
+        <h2>Example Response</h2>
+        <pre>
+            <strong>Status:</strong> <code>200 OK</code>
+            <strong>Content-Type:</strong> <code>application/json</code>
+            <strong>Body:</strong>
+            {
+                "prediction": "Your crop prediction result will be shown here."
+            }
+        </pre>
+        <p>
+            Note: Make sure to replace the example values with your actual data when making requests to the API.
+        </p>
+    </div>
+</body>
+</html>
